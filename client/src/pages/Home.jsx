@@ -1,12 +1,11 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [selectedCuisine, setSelectedCuisine] = useState("All");
-  const [dishQuery, setDishQuery] = useState("");
-  const [likedDishes, setLikedDishes] = useState([]);
-  const [toastMessage, setToastMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   const featuredRestaurants = [
     {
@@ -14,64 +13,84 @@ const Home = () => {
       name: "Spice Kingdom",
       cuisine: "Indian",
       rating: 4.5,
+      reviewCount: 1240,
       deliveryTime: "30-40 mins",
+      deliveryFee: "Free",
+      minOrder: 199,
       image: "🏪",
+      categories: ["Indian", "North Indian", "Biryani"],
+      distance: "1.2 km",
+      isOpen: true,
     },
     {
       id: 2,
       name: "Pizza Paradise",
       cuisine: "Italian",
       rating: 4.3,
+      reviewCount: 892,
       deliveryTime: "25-35 mins",
+      deliveryFee: "₹30",
+      minOrder: 249,
       image: "🍕",
+      categories: ["Italian", "Pizza", "Fast Food"],
+      distance: "0.8 km",
+      isOpen: true,
     },
     {
       id: 3,
       name: "Dragon Wok",
       cuisine: "Chinese",
       rating: 4.6,
+      reviewCount: 2103,
       deliveryTime: "35-45 mins",
+      deliveryFee: "₹25",
+      minOrder: 299,
       image: "🥢",
+      categories: ["Chinese", "Asian", "Noodles"],
+      distance: "1.5 km",
+      isOpen: true,
     },
     {
       id: 4,
       name: "Burger Haven",
       cuisine: "American",
       rating: 4.4,
+      reviewCount: 1567,
       deliveryTime: "20-30 mins",
+      deliveryFee: "Free",
+      minOrder: 149,
       image: "🍔",
+      categories: ["American", "Burgers", "Fast Food"],
+      distance: "0.5 km",
+      isOpen: false,
     },
     {
       id: 5,
-      name: "Sushi Port",
+      name: "Sushi Master",
       cuisine: "Japanese",
-      rating: 4.7,
-      deliveryTime: "30-40 mins",
+      rating: 4.8,
+      reviewCount: 734,
+      deliveryTime: "40-50 mins",
+      deliveryFee: "₹40",
+      minOrder: 399,
       image: "🍣",
+      categories: ["Japanese", "Sushi", "Asian"],
+      distance: "2.1 km",
+      isOpen: true,
     },
     {
       id: 6,
-      name: "Taco Fiesta",
-      cuisine: "Mexican",
-      rating: 4.2,
-      deliveryTime: "25-35 mins",
-      image: "🌮",
-    },
-    {
-      id: 7,
-      name: "Green Bowl",
-      cuisine: "Healthy",
-      rating: 4.6,
-      deliveryTime: "18-28 mins",
-      image: "🥗",
-    },
-    {
-      id: 8,
-      name: "Morning Brew Cafe",
-      cuisine: "Cafe",
-      rating: 4.5,
-      deliveryTime: "15-25 mins",
-      image: "☕",
+      name: "Mediterranean Grill",
+      cuisine: "Mediterranean",
+      rating: 4.7,
+      reviewCount: 567,
+      deliveryTime: "35-45 mins",
+      deliveryFee: "₹35",
+      minOrder: 349,
+      image: "🥙",
+      categories: ["Mediterranean", "Healthy", "Grill"],
+      distance: "1.8 km",
+      isOpen: true,
     },
   ];
 
@@ -82,7 +101,10 @@ const Home = () => {
       restaurant: "Spice Kingdom",
       price: 299,
       rating: 4.7,
+      reviewCount: 342,
       image: "🍛",
+      isVeg: false,
+      isBestseller: true,
     },
     {
       id: 2,
@@ -90,7 +112,10 @@ const Home = () => {
       restaurant: "Pizza Paradise",
       price: 349,
       rating: 4.5,
+      reviewCount: 567,
       image: "🍕",
+      isVeg: true,
+      isBestseller: true,
     },
     {
       id: 3,
@@ -98,7 +123,10 @@ const Home = () => {
       restaurant: "Dragon Wok",
       price: 249,
       rating: 4.6,
+      reviewCount: 289,
       image: "🍜",
+      isVeg: true,
+      isBestseller: false,
     },
     {
       id: 4,
@@ -106,7 +134,10 @@ const Home = () => {
       restaurant: "Burger Haven",
       price: 199,
       rating: 4.4,
+      reviewCount: 423,
       image: "🍔",
+      isVeg: false,
+      isBestseller: true,
     },
     {
       id: 5,
@@ -114,7 +145,10 @@ const Home = () => {
       restaurant: "Spice Kingdom",
       price: 279,
       rating: 4.8,
+      reviewCount: 456,
       image: "🍖",
+      isVeg: false,
+      isBestseller: true,
     },
     {
       id: 6,
@@ -122,258 +156,274 @@ const Home = () => {
       restaurant: "Pizza Paradise",
       price: 99,
       rating: 4.3,
+      reviewCount: 178,
       image: "🥖",
+      isVeg: true,
+      isBestseller: false,
     },
     {
       id: 7,
       name: "California Roll",
-      restaurant: "Sushi Port",
-      price: 399,
-      rating: 4.7,
+      restaurant: "Sushi Master",
+      price: 449,
+      rating: 4.9,
+      reviewCount: 234,
       image: "🍣",
+      isVeg: false,
+      isBestseller: true,
     },
     {
       id: 8,
-      name: "Chicken Taco",
-      restaurant: "Taco Fiesta",
-      price: 179,
-      rating: 4.4,
-      image: "🌮",
-    },
-    {
-      id: 9,
-      name: "Quinoa Power Bowl",
-      restaurant: "Green Bowl",
-      price: 289,
-      rating: 4.8,
-      image: "🥗",
-    },
-    {
-      id: 10,
-      name: "Cappuccino",
-      restaurant: "Morning Brew Cafe",
-      price: 149,
-      rating: 4.5,
-      image: "☕",
-    },
-    {
-      id: 11,
-      name: "Paneer Tikka Wrap",
-      restaurant: "Spice Kingdom",
-      price: 219,
-      rating: 4.6,
+      name: "Falafel Wrap",
+      restaurant: "Mediterranean Grill",
+      price: 279,
+      rating: 4.7,
+      reviewCount: 167,
       image: "🌯",
-    },
-    {
-      id: 12,
-      name: "Choco Lava Cake",
-      restaurant: "Pizza Paradise",
-      price: 169,
-      rating: 4.7,
-      image: "🍰",
+      isVeg: true,
+      isBestseller: false,
     },
   ];
 
-  const customerReviews = [
-    {
-      id: 1,
-      name: "Aarav S.",
-      location: "Downtown",
-      message: "Delivery was super quick and the food arrived hot.",
-      rating: 5,
-    },
-    {
-      id: 2,
-      name: "Neha R.",
-      location: "City Center",
-      message: "Great offers and smooth checkout experience every time.",
-      rating: 4.8,
-    },
-    {
-      id: 3,
-      name: "Kabir M.",
-      location: "Riverside",
-      message: "Love the variety of restaurants and easy tracking.",
-      rating: 4.9,
-    },
-    {
-      id: 4,
-      name: "Priya K.",
-      location: "West End",
-      message: "Amazing customer support and reliable delivery partners.",
-      rating: 4.8,
-    },
-    {
-      id: 5,
-      name: "Rahul D.",
-      location: "Old Town",
-      message: "Best app for late-night cravings with great discounts.",
-      rating: 4.7,
-    },
-    {
-      id: 6,
-      name: "Meera P.",
-      location: "Lake View",
-      message: "Neat UI, quick ordering, and quality food options.",
-      rating: 4.9,
-    },
-  ];
-
-  const cuisines = useMemo(
-    () => ["All", ...new Set(featuredRestaurants.map((item) => item.cuisine))],
-    [featuredRestaurants]
-  );
-
-  const filteredRestaurants = useMemo(() => {
-    if (selectedCuisine === "All") return featuredRestaurants;
-    return featuredRestaurants.filter(
-      (restaurant) => restaurant.cuisine === selectedCuisine
-    );
-  }, [selectedCuisine, featuredRestaurants]);
-
-  const filteredDishes = useMemo(() => {
-    const query = dishQuery.trim().toLowerCase();
-    const selectedCuisineRestaurants = featuredRestaurants
-      .filter((restaurant) => restaurant.cuisine === selectedCuisine)
-      .map((restaurant) => restaurant.name);
-
-    return popularDishes.filter((dish) => {
-      const matchesCuisine =
-        selectedCuisine === "All" ||
-        selectedCuisineRestaurants.includes(dish.restaurant);
-      const matchesQuery =
-        !query ||
-        dish.name.toLowerCase().includes(query) ||
-        dish.restaurant.toLowerCase().includes(query);
-      return matchesCuisine && matchesQuery;
-    });
-  }, [dishQuery, featuredRestaurants, popularDishes, selectedCuisine]);
-
-  const averageDishPrice = useMemo(() => {
-    const total = popularDishes.reduce((sum, dish) => sum + dish.price, 0);
-    return Math.round(total / popularDishes.length);
-  }, [popularDishes]);
-
-  const averageRating = useMemo(() => {
-    const allRatings = [...featuredRestaurants, ...popularDishes].map(
-      (item) => item.rating
-    );
-    const total = allRatings.reduce((sum, rating) => sum + rating, 0);
-    return (total / allRatings.length).toFixed(1);
-  }, [featuredRestaurants, popularDishes]);
-
-  const quickestDelivery = useMemo(() => {
-    const quickest = featuredRestaurants.reduce((min, restaurant) => {
-      const minTime = Number.parseInt(restaurant.deliveryTime.split("-")[0], 10);
-      return minTime < min ? minTime : min;
-    }, Number.POSITIVE_INFINITY);
-
-    return `${quickest} mins`;
-  }, [featuredRestaurants]);
-
-  const handleToggleLike = (dishId) => {
-    setLikedDishes((prev) =>
-      prev.includes(dishId)
-        ? prev.filter((id) => id !== dishId)
-        : [...prev, dishId]
-    );
+  const handleAddToCart = (dish) => {
+    // You can implement cart logic here
+    console.log(`Added ${dish.name} to cart`);
+    // Show a toast notification (you'll need to add a toast library)
+    alert(`Added ${dish.name} to cart!`);
   };
 
-  const handleAddToCart = (dishName) => {
-    setToastMessage(`${dishName} added to cart`);
-    setTimeout(() => setToastMessage(""), 1800);
+  const getRatingColor = (rating) => {
+    if (rating >= 4.5) return "bg-green-500";
+    if (rating >= 4.0) return "bg-green-400";
+    if (rating >= 3.5) return "bg-yellow-500";
+    return "bg-orange-500";
+  };
+
+  const filteredRestaurants = searchQuery.trim() === "" ? [] : featuredRestaurants.filter((restaurant) =>
+    restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    restaurant.cuisine.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    restaurant.categories.some((cat) =>
+      cat.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
+  const filteredDishes = searchQuery.trim() === "" ? [] : popularDishes.filter((dish) =>
+    dish.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    dish.restaurant.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      setShowSearchResults(true);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setShowSearchResults(false);
   };
 
   return (
-    <div className="home-page">
-      {toastMessage ? (
-        <div className="fixed top-20 right-4 z-50 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg toast-slide">
-          {toastMessage}
-        </div>
-      ) : null}
-
-      {/* Hero Section */}
-      <section className="relative hero-aurora text-white py-20 overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="">
-            {/* Left Content */}
-            <div className="space-y-6 reveal-up">
-              <h1 className="text-base sm:text-xl md:text-3xl lg:text-5xl xl:text-7xl font-bold leading-tight">
-                Feed Your Craving, Anytime
-              </h1>
-              <p className="text-xs sm:text-md md:text-lg  lg:text-2xl xl:text-4xl text-orange-50">
-                Discover delicious meals from the best restaurants in your area.
-                Fast delivery, great quality, amazing taste!
-              </p>
-              <div className="flex flex-wrap gap-4 pt-4">
-                <button
-                  onClick={() => navigate("/order-now")}
-                  className="px-8 py-3 bg-white text-orange-600 font-semibold rounded-lg hover:bg-orange-50 transition duration-300 transform hover:scale-105 btn-glow"
-                >
-                  Order Now
-                </button>
-                <button
-                  onClick={() => navigate("/contact")}
-                  className="px-8 py-3 bg-orange-700 text-white font-semibold rounded-lg hover:bg-orange-800 transition duration-300 border-2 border-white"
-                >
-                  Contact Us
-                </button>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-4 pt-8">
-                <div>
-                  <p className="text-3xl font-bold">500+</p>
-                  <p className="text-orange-50">Restaurants</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold">50K+</p>
-                  <p className="text-orange-50">Happy Customers</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold">24/7</p>
-                  <p className="text-orange-50">Support</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Platform Data Section */}
-      <section className="py-14 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Platform Insights
-            </h2>
-            <p className="text-gray-600 text-lg">
-              Real numbers that show what users love about Cravings
+    <>
+      {/* Hero Section with Search */}
+      <section className="relative bg-linear-to-r from-orange-500 to-orange-600 text-white py-20">
+        <div className="absolute inset-0 bg-black opacity-10"></div>
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-6">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight animate-fade-in">
+              Feed Your Craving, <span className="text-orange-200">Anytime</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-orange-50 max-w-3xl mx-auto">
+              Discover delicious meals from the best restaurants in your area.
+              Fast delivery, great quality, amazing taste!
             </p>
-          </div>
+            
+            {/* Search Bar */}
+            <div className="max-w-2xl mx-auto pt-8">
+              <div className="flex gap-2 bg-white rounded-full p-2 shadow-lg">
+                <input
+                  type="text"
+                  placeholder="Search for restaurants or dishes..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") handleSearch();
+                  }}
+                  className="flex-1 px-6 py-3 text-gray-800 rounded-full focus:outline-none"
+                />
+                <button
+                  onClick={handleSearch}
+                  className="px-6 py-3 bg-orange-600 text-white rounded-full hover:bg-orange-700 transition duration-300 font-semibold"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-orange-50 border border-orange-100 rounded-xl p-6 text-center card-3d reveal-up">
-              <p className="text-sm text-gray-600 mb-1">Active Cuisines</p>
-              <p className="text-3xl font-bold text-orange-600">{cuisines.length - 1}</p>
+            <div className="flex flex-wrap gap-4 justify-center pt-8">
+              <button
+                onClick={() => navigate("/order-now")}
+                className="px-8 py-3 bg-white text-orange-600 font-semibold rounded-lg hover:bg-orange-50 transition duration-300 transform hover:scale-105 shadow-lg"
+              >
+                Order Now 🚀
+              </button>
+              <button
+                onClick={() => navigate("/contact")}
+                className="px-8 py-3 bg-orange-700 text-white font-semibold rounded-lg hover:bg-orange-800 transition duration-300 border-2 border-white"
+              >
+                Contact Us 📞
+              </button>
             </div>
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-6 text-center card-3d reveal-up" style={{ animationDelay: "0.08s" }}>
-              <p className="text-sm text-gray-600 mb-1">Avg Dish Price</p>
-              <p className="text-3xl font-bold text-blue-600">₹{averageDishPrice}</p>
-            </div>
-            <div className="bg-green-50 border border-green-100 rounded-xl p-6 text-center card-3d reveal-up" style={{ animationDelay: "0.16s" }}>
-              <p className="text-sm text-gray-600 mb-1">Avg User Rating</p>
-              <p className="text-3xl font-bold text-green-600">{averageRating} ⭐</p>
-            </div>
-            <div className="bg-purple-50 border border-purple-100 rounded-xl p-6 text-center card-3d reveal-up" style={{ animationDelay: "0.24s" }}>
-              <p className="text-sm text-gray-600 mb-1">Fastest Delivery</p>
-              <p className="text-3xl font-bold text-purple-600">{quickestDelivery}</p>
+
+            {/* Stats with Icons */}
+            <div className="grid grid-cols-3 gap-4 pt-12 max-w-3xl mx-auto">
+              <div className="text-center">
+                <p className="text-4xl font-bold">500+</p>
+                <p className="text-orange-50 flex items-center justify-center gap-1">
+                  🏪 Restaurants
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-4xl font-bold">50K+</p>
+                <p className="text-orange-50 flex items-center justify-center gap-1">
+                  😊 Happy Customers
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-4xl font-bold">24/7</p>
+                <p className="text-orange-50 flex items-center justify-center gap-1">
+                  🕐 Support
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Search Results Section */}
+      {showSearchResults && (
+        <section className="py-16 bg-white">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center mb-12">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+                  Search Results for "{searchQuery}"
+                </h2>
+                <p className="text-gray-600">
+                  Found {filteredRestaurants.length} restaurants and {filteredDishes.length} dishes
+                </p>
+              </div>
+              <button
+                onClick={clearSearch}
+                className="px-6 py-2 text-gray-600 hover:text-orange-600 font-semibold transition duration-300"
+              >
+                Clear Search ✕
+              </button>
+            </div>
+
+            {filteredRestaurants.length > 0 && (
+              <div className="mb-12">
+                <h3 className="text-2xl font-bold text-gray-800 mb-6">Matching Restaurants</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredRestaurants.map((restaurant) => (
+                    <div
+                      key={restaurant.id}
+                      className="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-2 border border-orange-200"
+                      onClick={() => navigate(`/restaurant/${restaurant.id}`)}
+                    >
+                      <div className="relative h-48 bg-linear-to-br from-orange-400 to-orange-500 flex items-center justify-center">
+                        <span className="text-7xl">{restaurant.image}</span>
+                        <div className="absolute top-3 right-3 bg-white px-2 py-1 rounded-full text-sm font-semibold text-gray-700">
+                          {restaurant.distance}
+                        </div>
+                      </div>
+                      <div className="p-5">
+                        <div className="flex justify-between items-start mb-2">
+                          <h3 className="text-xl font-bold text-gray-800">
+                            {restaurant.name}
+                          </h3>
+                          <div className={`px-2 py-1 rounded-full text-white text-sm ${getRatingColor(restaurant.rating)}`}>
+                            ⭐ {restaurant.rating}
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-2">
+                          {restaurant.cuisine}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          ⏱️ {restaurant.deliveryTime} • {restaurant.deliveryFee} delivery
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {filteredDishes.length > 0 && (
+              <div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-6">Matching Dishes</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {filteredDishes.map((dish) => (
+                    <div
+                      key={dish.id}
+                      className="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden group border border-orange-200"
+                    >
+                      <div className="relative h-56 bg-linear-to-br from-orange-300 to-orange-400 flex items-center justify-center">
+                        <span className="text-8xl group-hover:scale-110 transition-transform duration-300">
+                          {dish.image}
+                        </span>
+                        {dish.isBestseller && (
+                          <div className="absolute top-3 left-3 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                            🔥 Bestseller
+                          </div>
+                        )}
+                        <div className="absolute top-3 right-3 bg-white px-2 py-1 rounded-full text-xs font-semibold">
+                          ⭐ {dish.rating}
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <h3 className="text-lg font-bold text-gray-800 mb-1">
+                          {dish.name}
+                        </h3>
+                        <p className="text-sm text-gray-600 mb-3">
+                          {dish.restaurant}
+                        </p>
+                        <div className="flex justify-between items-center mb-3">
+                          <span className="text-2xl font-bold text-orange-600">
+                            ₹{dish.price}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => handleAddToCart(dish)}
+                          className="w-full px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition duration-300 font-semibold"
+                        >
+                          🛒 Add to Cart
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {filteredRestaurants.length === 0 && filteredDishes.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-2xl text-gray-500 mb-4">😕 No results found</p>
+                <p className="text-gray-600 mb-8">Try searching with different keywords</p>
+                <button
+                  onClick={clearSearch}
+                  className="px-8 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 font-semibold transition duration-300"
+                >
+                  Browse All Items
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Featured Restaurants Section */}
+      {!showSearchResults && (
       <section className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -381,64 +431,96 @@ const Home = () => {
               Featured Restaurants
             </h2>
             <p className="text-gray-600 text-lg">
-              Explore our top-rated restaurants
+              Explore our top-rated restaurants near you
             </p>
-
-            <div className="flex flex-wrap justify-center gap-3 mt-6">
-              {cuisines.map((cuisine) => (
-                <button
-                  key={cuisine}
-                  onClick={() => setSelectedCuisine(cuisine)}
-                  className={`px-4 py-2 rounded-full border transition duration-300 ${
-                    selectedCuisine === cuisine
-                      ? "bg-orange-600 text-white border-orange-600"
-                      : "bg-white text-gray-700 border-gray-300 hover:border-orange-500"
-                  }`}
-                >
-                  {cuisine}
-                </button>
-              ))}
-            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredRestaurants.map((restaurant, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredRestaurants.map((restaurant) => (
               <div
                 key={restaurant.id}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 overflow-hidden cursor-pointer transform hover:scale-105 card-3d reveal-up"
-                style={{ animationDelay: `${index * 0.08}s` }}
+                className="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-2"
+                onClick={() => navigate(`/restaurant/${restaurant.id}`)}
               >
-                <div className="h-40 bg-linear-to-br from-orange-400 to-orange-500 flex items-center justify-center">
-                  <span className="text-6xl float-icon">{restaurant.image}</span>
-                </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                    {restaurant.name}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-3">
-                    {restaurant.cuisine}
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-1">
-                      <span className="text-yellow-500">⭐</span>
-                      <span className="font-semibold text-gray-800">
-                        {restaurant.rating}
+                <div className="relative h-48 bg-linear-to-br from-orange-400 to-orange-500 flex items-center justify-center">
+                  <span className="text-7xl">{restaurant.image}</span>
+                  {!restaurant.isOpen && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                      <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                        Temporarily Closed
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600">
-                      {restaurant.deliveryTime}
-                    </p>
+                  )}
+                  <div className="absolute top-3 right-3 bg-white px-2 py-1 rounded-full text-sm font-semibold text-gray-700">
+                    {restaurant.distance}
+                  </div>
+                </div>
+                <div className="p-5">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-xl font-bold text-gray-800">
+                      {restaurant.name}
+                    </h3>
+                    <div className={`px-2 py-1 rounded-full text-white text-sm ${getRatingColor(restaurant.rating)}`}>
+                      ⭐ {restaurant.rating}
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">
+                    {restaurant.cuisine} • {restaurant.reviewCount}+ reviews
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {restaurant.categories.slice(0, 2).map((cat, idx) => (
+                      <span key={idx} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                        {cat}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex justify-between items-center text-sm text-gray-600">
+                    <div className="flex items-center gap-2">
+                      <span>⏱️ {restaurant.deliveryTime}</span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-green-600">{restaurant.deliveryFee}</span>
+                      <span className="text-xs"> delivery</span>
+                    </div>
+                  </div>
+                  <div className="mt-3 text-xs text-gray-500">
+                    Min. order ₹{restaurant.minOrder}
                   </div>
                 </div>
               </div>
             ))}
           </div>
+          
+          <div className="text-center mt-12">
+            <button
+              onClick={() => navigate("/order-now")}
+              className="px-8 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition duration-300 font-semibold"
+            >
+              View All Restaurants →
+            </button>
+          </div>
+        </div>
+      </section>
+      )}
 
-          {filteredRestaurants.length === 0 ? (
-            <p className="text-center text-gray-500 mt-8">
-              No restaurants found for this cuisine yet.
-            </p>
-          ) : null}
+      {/* Category Filters */}
+      <section className="py-8 bg-white border-b">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap justify-center gap-3">
+            {["all", "Indian", "Italian", "Chinese", "American", "Japanese", "Mediterranean"].map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`px-6 py-2 rounded-full font-semibold transition duration-300 ${
+                  activeCategory === category
+                    ? "bg-orange-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-orange-100"
+                }`}
+              >
+                {category === "all" ? "All Cuisines" : category}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -452,71 +534,58 @@ const Home = () => {
             <p className="text-gray-600 text-lg">
               Most loved meals by our customers
             </p>
-
-            <div className="max-w-md mx-auto mt-6">
-              <input
-                type="text"
-                value={dishQuery}
-                onChange={(e) => setDishQuery(e.target.value)}
-                placeholder="Search dish or restaurant"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredDishes.map((dish, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {popularDishes.map((dish) => (
               <div
                 key={dish.id}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 overflow-hidden cursor-pointer card-3d reveal-up"
-                style={{ animationDelay: `${index * 0.08}s` }}
+                className="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden group"
               >
-                <div className="h-48 bg-linear-to-br from-orange-300 to-orange-400 flex items-center justify-center relative">
-                  <button
-                    onClick={() => handleToggleLike(dish.id)}
-                    className="absolute top-3 right-3 bg-white/80 rounded-full px-2 py-1 text-lg"
-                    aria-label="Toggle favorite"
-                  >
-                    {likedDishes.includes(dish.id) ? "❤️" : "🤍"}
-                  </button>
-                  <span className="text-8xl dish-image-pop">{dish.image}</span>
+                <div className="relative h-56 bg-linear-to-br from-orange-300 to-orange-400 flex items-center justify-center">
+                  <span className="text-8xl group-hover:scale-110 transition-transform duration-300">
+                    {dish.image}
+                  </span>
+                  {dish.isBestseller && (
+                    <div className="absolute top-3 left-3 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                      🔥 Bestseller
+                    </div>
+                  )}
+                  <div className="absolute top-3 right-3 bg-white px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                    ⭐ {dish.rating}
+                    <span className="text-gray-500">({dish.reviewCount})</span>
+                  </div>
+                  <div className={`absolute bottom-3 left-3 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                    dish.isVeg ? "bg-green-500" : "bg-red-500"
+                  } text-white`}>
+                    {dish.isVeg ? "V" : "N"}
+                  </div>
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                  <h3 className="text-lg font-bold text-gray-800 mb-1">
                     {dish.name}
                   </h3>
                   <p className="text-sm text-gray-600 mb-3">
                     {dish.restaurant}
                   </p>
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl font-bold text-orange-600">
-                        ₹{dish.price}
-                      </span>
-                      <div className="flex items-center gap-1">
-                        <span className="text-yellow-500">⭐</span>
-                        <span className="text-sm font-semibold">
-                          {dish.rating}
-                        </span>
-                      </div>
-                    </div>
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-2xl font-bold text-orange-600">
+                      ₹{dish.price}
+                    </span>
+                    <span className="text-sm text-green-600 font-semibold">
+                      Save ₹{Math.floor(dish.price * 0.1)}
+                    </span>
                   </div>
                   <button
-                    onClick={() => handleAddToCart(dish.name)}
-                    className="w-full mt-3 px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition duration-300 font-medium"
+                    onClick={() => handleAddToCart(dish)}
+                    className="w-full px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition duration-300 font-semibold flex items-center justify-center gap-2"
                   >
-                    Add to Cart
+                    🛒 Add to Cart
                   </button>
                 </div>
               </div>
             ))}
           </div>
-
-          {filteredDishes.length === 0 ? (
-            <p className="text-center text-gray-500 mt-8">
-              No dishes match your search. Try another keyword.
-            </p>
-          ) : null}
         </div>
       </section>
 
@@ -527,6 +596,9 @@ const Home = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
               Why Choose Cravings?
             </h2>
+            <p className="text-gray-600 text-lg">
+              We're committed to providing the best food delivery experience
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -534,30 +606,35 @@ const Home = () => {
               {
                 icon: "⚡",
                 title: "Fast Delivery",
-                description: "Get your food delivered in minutes",
+                description: "Get your food delivered in 30 minutes or less",
+                color: "from-yellow-400 to-orange-500",
               },
               {
                 icon: "🔒",
                 title: "Safe Payment",
                 description: "Secure and encrypted transactions",
+                color: "from-green-400 to-green-600",
               },
               {
                 icon: "🌟",
                 title: "Quality Assured",
                 description: "Only verified restaurants and vendors",
+                color: "from-blue-400 to-blue-600",
               },
               {
                 icon: "💬",
                 title: "24/7 Support",
                 description: "We're always here to help you",
+                color: "from-purple-400 to-purple-600",
               },
             ].map((feature, index) => (
               <div
                 key={index}
-                className="bg-white p-6 rounded-lg shadow-md text-center card-3d reveal-up"
-                style={{ animationDelay: `${index * 0.08}s` }}
+                className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition duration-300 transform hover:-translate-y-2"
               >
-                <span className="text-5xl mb-4 block">{feature.icon}</span>
+                <div className={`inline-block p-4 rounded-full bg-linear-to-r ${feature.color} mb-4`}>
+                  <span className="text-4xl">{feature.icon}</span>
+                </div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
                   {feature.title}
                 </h3>
@@ -568,56 +645,107 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Customer Voices Section */}
+      {/* Testimonials Section */}
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              What Customers Say
+              What Our Customers Say
             </h2>
             <p className="text-gray-600 text-lg">
-              Trusted by food lovers across the city
+              Join thousands of satisfied food lovers
             </p>
           </div>
-
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {customerReviews.map((review, index) => (
-              <article
-                key={review.id}
-                className="bg-gray-50 rounded-xl border border-gray-200 p-6 card-3d reveal-up"
-                style={{ animationDelay: `${index * 0.08}s` }}
-              >
-                <p className="text-yellow-500 text-lg mb-3">{"⭐".repeat(Math.floor(review.rating))}</p>
-                <p className="text-gray-700 mb-4">"{review.message}"</p>
-                <div className="text-sm text-gray-600">
-                  <p className="font-semibold text-gray-800">{review.name}</p>
-                  <p>{review.location}</p>
+            {[
+              {
+                name: "Rahul Sharma",
+                rating: 5,
+                comment: "Amazing food delivery service! The food arrived hot and fresh. Highly recommended!",
+                image: "👨",
+                date: "2 days ago",
+              },
+              {
+                name: "Priya Patel",
+                rating: 5,
+                comment: "Best food delivery app in town. Wide variety of restaurants and quick delivery.",
+                image: "👩",
+                date: "5 days ago",
+              },
+              {
+                name: "Amit Kumar",
+                rating: 4,
+                comment: "Great experience overall. The tracking feature is very useful. Will order again!",
+                image: "👨",
+                date: "1 week ago",
+              },
+            ].map((testimonial, index) => (
+              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">{testimonial.image}</span>
+                  <div>
+                    <h4 className="font-semibold text-gray-800">{testimonial.name}</h4>
+                    <div className="flex items-center gap-1">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <span key={i} className="text-yellow-500">★</span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </article>
+                <p className="text-gray-600 mb-3">"{testimonial.comment}"</p>
+                <p className="text-xs text-gray-400">{testimonial.date}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Newsletter Section */}
       <section className="py-16 bg-linear-to-r from-orange-500 to-orange-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Order?
+            Get Exclusive Offers!
           </h2>
           <p className="text-lg text-orange-50 mb-8">
+            Subscribe to our newsletter and get 20% off on your first order
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              className="flex-1 px-6 py-3 rounded-full text-gray-800 focus:outline-none"
+            />
+            <button className="px-8 py-3 bg-white text-orange-600 font-semibold rounded-full hover:bg-orange-50 transition duration-300">
+              Subscribe Now
+            </button>
+          </div>
+          <p className="text-sm text-orange-200 mt-4">
+            No spam, unsubscribe anytime
+          </p>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-gray-900 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Ready to Satisfy Your Cravings?
+          </h2>
+          <p className="text-lg text-gray-300 mb-8">
             Join thousands of satisfied customers and enjoy delicious food
-            delivered to your doorstep
+            delivered to your doorstep in minutes
           </p>
           <button
             onClick={() => navigate("/order-now")}
-            className="px-8 py-3 bg-white text-orange-600 font-semibold rounded-lg hover:bg-orange-50 transition duration-300 transform hover:scale-105 btn-glow"
+            className="px-8 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition duration-300 transform hover:scale-105 shadow-lg"
           >
-            Order Now
+            Order Now 🚀
           </button>
         </div>
       </section>
-    </div>
+     
+    </>
   );
 };
 

@@ -32,7 +32,10 @@ export const NewContact = async (req, res, next) => {
 
 export const GetAllRestaurants = async (req, res, next) => {
   try {
-    const restaurants = await User.find({ role: "manager" }).select(
+    const restaurants = await User.find({ 
+      role: "manager",
+      restaurantName: { $ne: "N/A" }
+    }).select(
       "-password",
     );
 
