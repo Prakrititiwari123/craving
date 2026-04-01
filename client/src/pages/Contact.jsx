@@ -595,7 +595,7 @@ const Contact = () => {
       </footer>
 
       {/* Enhanced Animations */}
-      <style jsx>{`
+      <style jsx="true">{`
         @keyframes float {
           0%, 100% {
             transform: translate(0, 0) scale(1);
