@@ -1,8 +1,6 @@
-// migrateToAtlas.js
-const mongoose = require('mongoose');
-// Import your models (adjust paths as per your project)
-const User = require('./src/models/userModel'); // example path
-const Menu = require('./src/models/menuSchema'); // example path
+import mongoose from 'mongoose';
+import User from './src/models/userModel.js';      // apna sahi path
+import Menu from './src/models/menuSchema.js';  
 
 
 export const DummyAdmin = {
